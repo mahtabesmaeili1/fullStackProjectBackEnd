@@ -4,12 +4,13 @@ const { Router } = express;
 const router = new Router();
 //GET - /products: Returns a list of products with their categories
 router.get("/", async (req, res, next) => {
+  const limit = req.query.limit || 4;
+  const offset = req.query.offset || 0;
   try {
-    const products = await Products.findAll();
-    res.send(products);
-  } catch (e) {
-    console.log(e.message);
-    next(e);
+    const result = await Products.findAndCountAll({ limit, offset });
+    res.send({ products: result.rows, total: result.count });
+  } catch (error) {
+    next(error);
   }
 });
 
