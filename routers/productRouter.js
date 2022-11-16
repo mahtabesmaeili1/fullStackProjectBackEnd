@@ -6,7 +6,7 @@ const { Router } = express;
 const router = new Router();
 //GET - /products: Returns a list of products with their categories
 router.get("/", async (req, res, next) => {
-  const limit = req.query.limit || 4;
+  const limit = req.query.limit || 11;
   const offset = req.query.offset || 0;
   try {
     const result = await Products.findAndCountAll({ limit, offset });
