@@ -1,4 +1,3 @@
-const { Router } = require("express");
 const express = require("express");
 const { toJWT } = require("../auth/jwt");
 const User = require("../models").users;
@@ -8,7 +7,7 @@ const { Router } = express;
 const router = new Router();
 
 //login
-router.post("/login", authMiddleware, async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const userToLogin = await User.findOne({ where: { email: email } });
   // if the user exists
@@ -27,7 +26,7 @@ router.post("/login", authMiddleware, async (req, res) => {
 });
 
 //signup
-router.post("/signup", authMiddleware, async (req, res) => {
+router.post("/signup", async (req, res, next) => {
   const { email, password, name } = req.body;
   if (!email || !password || !name) {
     return res
@@ -36,7 +35,11 @@ router.post("/signup", authMiddleware, async (req, res) => {
   }
 
   try {
-    const createdUser = await User.create(newUser);
+    const createdUser = await User.create({
+      email: email,
+      password: bcrypt.hashSync(password, 10),
+      name: name,
+    });
     res.json(createdUser);
   } catch (e) {
     next(e);
