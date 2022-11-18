@@ -2,7 +2,7 @@ const express = require("express");
 const { toJWT } = require("../auth/jwt");
 const User = require("../models").users;
 const bcrypt = require("bcrypt");
-const authMiddleware = require("../auth/middleware");
+
 const { Router } = express;
 const router = new Router();
 
@@ -19,7 +19,7 @@ router.post("/login", async (req, res) => {
   if (bcrypt.compareSync(password, userToLogin.password)) {
     // Generate a token
     const token = toJWT({ userId: userToLogin.id });
-    res.send({ token: token });
+    res.send({ token: token, name: userToLogin.name });
     return;
   }
   res.status(400).send("User with that password and/or email not found!");

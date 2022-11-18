@@ -1,6 +1,6 @@
 const express = require("express");
 const Products = require("../models").products;
-
+const authMiddleware = require("../auth/middleware");
 const Category = require("../models").categories;
 const { Router } = express;
 const router = new Router();
